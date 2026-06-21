@@ -1,48 +1,35 @@
-from fastapi import FastAPI, Header, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI
 from pydantic import BaseModel
-import requests
 
 app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-MY_SECRET_KEY = "meri-desi-ai-key-123"
 
 class ChatRequest(BaseModel):
     message: str
 
 @app.get("/")
 def home():
-    return {"status": "Desi AI Server is Online!"}
+    return {"status": "Tauji aur Sensitivity Dono Server Ekdum Live Hain!"}
 
-@app.post("/v1/chat")
-async def chat_with_local_ai(request: ChatRequest, authorization: str = Header(None)):
-    if not authorization or authorization != f"Bearer {MY_SECRET_KEY}":
-        raise HTTPException(status_code=401, detail="Arre bhai, galat API key h!")
+# 1. PEHLA APP: Free Fire Sensitivity App ka rasta
+@app.post("/sensitivity-chat")
+def get_sensitivity_response(request: ChatRequest):
+    user_msg = request.message.lower()
+    if "sensivity" in user_msg or "sensitivity" in user_msg or "ff" in user_msg:
+        return {
+            "response": "Re chore! iQOO z10x ki lath gaad Sensitivity ye le:\n\n🎯 General: 98\n🔴 Red Dot: 95\n🔍 2X Scope: 90\n🔭 4X Scope: 88\n\nIse laga le, fir dekh saare headshot lagenge! 😉"
+        }
+    return {"response": "Ram Ram bhai! Free Fire ki sensitivity jaan-ni hai toh device ka naam sahi se likho!"}
+
+# 2. DUSRA APP: Asli Desi AI Chatbot (Tauji) ka rasta
+@app.post("/desi-tauji-chat")
+def get_tauji_response(request: ChatRequest):
+    user_msg = request.message.lower()
     
-    ollama_url = "http://127.0.0.1:11434/api/generate"
-    payload = {
-        "model": "phi3",  # Ekdum correct aur tested model name
-        "prompt": request.message,
-        "stream": False   # Normal fast JSON response ke liye
-    }
+    if "kaise ho" in user_msg or "ram ram" in user_msg:
+        return {"response": "Ram Ram re chore! Ib tera Tau ekdum raaji-khushi se. Tu bata ke khichdi pakh rhi se tere dimaag me?"}
     
-    try:
-        response = requests.post(ollama_url, json=payload)
-        response_data = response.json()
-        
-        # Agar Ollama sahi response de toh bhejो, nahi toh error pakdo
-        if "response" in response_data:
-            return {"reply": response_data["response"]}
-        else:
-            return {"reply": "Ollama chal toh raha hai par reply khali hai!"}
-            
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
+    elif "shayari" in user_msg or "joke" in user_msg:
+        return {"response": "Kade dhoop me ghumme, kade chaav me ghumme...\nArre asli maza toh chore jab Tau haryanvi me jhaad dikhaave! 😂"}
+    
+    else:
+        return {"response": "Re chore, ib dhang ki baat pooch le Tau te, yo tera naya server ekdum lath gaad chal rya se! 🌾"}
