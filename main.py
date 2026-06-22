@@ -10,17 +10,20 @@ class ChatRequest(BaseModel):
 def home():
     return {"status": "Tauji aur Sensitivity Dono Server Ekdum Live Hain!"}
 
-# 1. PEHLA APP: Free Fire Sensitivity App ka rasta
+# 1. PEHLA APP: Free Fire Sensitivity
 @app.post("/sensitivity-chat")
 def get_sensitivity_response(request: ChatRequest):
     user_msg = request.message.lower()
-    if "sensivity" in user_msg or "sensitivity" in user_msg or "ff" in user_msg:
+    
+    # Ab ye 'sensitivity', 'ff' ya kisi bhi device ke naam ko detect karega
+    if any(word in user_msg for word in ["sensivity", "sensitivity", "ff", "iqoo", "samsung", "realme", "redmi"]):
         return {
             "response": "Re chore! iQOO z10x ki lath gaad Sensitivity ye le:\n\n🎯 General: 98\n🔴 Red Dot: 95\n🔍 2X Scope: 90\n🔭 4X Scope: 88\n\nIse laga le, fir dekh saare headshot lagenge! 😉"
         }
-    return {"response": "Ram Ram bhai! Free Fire ki sensitivity jaan-ni hai toh device ka naam sahi se likho!"}
+    
+    return {"response": "Ram Ram bhai! Free Fire ki sensitivity jaan-ni hai toh device ka naam (jaise iQOO, Samsung) sahi se likho!"}
 
-# 2. DUSRA APP: Asli Desi AI Chatbot (Tauji) ka rasta
+# 2. DUSRA APP: Desi Tauji AI
 @app.post("/desi-tauji-chat")
 def get_tauji_response(request: ChatRequest):
     user_msg = request.message.lower()
